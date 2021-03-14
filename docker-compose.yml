@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  gatling:
+    build: ./gatling
+    container_name: gatling
+    hostname: gatling
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./scenario/:/gatling/gatling-charts-highcharts-bundle-3.5.1/user-files
+      - ./results:/gatling/gatling-charts-highcharts-bundle-3.5.1/results
+    command: /bin/bash
+
+  nginx:
+    image: nginx:latest
+    links:
+      - gatling
+    ports:
+      - 8081:80
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./results:/var/html
